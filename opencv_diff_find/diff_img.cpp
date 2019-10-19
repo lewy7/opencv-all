@@ -50,8 +50,8 @@ void ps_diff()
 
 void find_partx()
 {
-	IplImage *image = cvLoadImage("63.jpg", CV_LOAD_IMAGE_COLOR);//Èç¹ûÏëÒª¼ÓËÙ£¬¿ÉÒÔÓÃ»ÒÉ«À´²Ù×÷,»ÒÉ«Æ¥ÅäºÜ²î
-	IplImage *part = cvLoadImage("63_part_large.jpg", CV_LOAD_IMAGE_COLOR);//Ò»°ã³ß´ç´óĞ¡²î¾à20%¿ÉÒÔÕÒ³öÀ´
+	IplImage *image = cvLoadImage("63.jpg", CV_LOAD_IMAGE_COLOR);//å¦‚æœæƒ³è¦åŠ é€Ÿï¼Œå¯ä»¥ç”¨ç°è‰²æ¥æ“ä½œ,ç°è‰²åŒ¹é…å¾ˆå·®
+	IplImage *part = cvLoadImage("63_part_large.jpg", CV_LOAD_IMAGE_COLOR);//ä¸€èˆ¬å°ºå¯¸å¤§å°å·®è·20%å¯ä»¥æ‰¾å‡ºæ¥
 	cvNamedWindow("monitor",CV_WINDOW_AUTOSIZE);
 
 
@@ -73,7 +73,7 @@ void find_partx()
 	int width = part->width;
 	int height = part->height;
 	
-	int change_way = 0; //ÏÈËõĞ¡²éÕÒ£¬ÔÙ·Å´ó²éÕÒ
+	int change_way = 0; //å…ˆç¼©å°æŸ¥æ‰¾ï¼Œå†æ”¾å¤§æŸ¥æ‰¾
 
 	while(1){
 		part_temp = cvCreateImage(cvSize( cvRound (width),cvRound (height)),8, 3);
@@ -111,7 +111,7 @@ void find_partx()
 			minRect.height = rect.height;
 		}
 
-		//ÕâÀï»­Í¼»á¸ÉÈÅÍ¼Ïñ
+		//è¿™é‡Œç”»å›¾ä¼šå¹²æ‰°å›¾åƒ
 		//cvRectangle(image, cvPoint(min_loc.x, min_loc.y), cvPoint((min_loc.x + part_temp->width),(min_loc.y + part_temp->height)), CV_RGB(0,255,0), 1);
 		
 		
@@ -153,8 +153,8 @@ void find_partx()
 
 void find_part()
 {
-	IplImage *image = cvLoadImage("754.jpg", CV_LOAD_IMAGE_COLOR);//Èç¹ûÏëÒª¼ÓËÙ£¬¿ÉÒÔÓÃ»ÒÉ«À´²Ù×÷,»ÒÉ«Æ¥ÅäºÜ²î
-	IplImage *part = cvLoadImage("754_part.jpg", CV_LOAD_IMAGE_COLOR);//Ò»°ã³ß´ç´óĞ¡²î¾à20%¿ÉÒÔÕÒ³öÀ´
+	IplImage *image = cvLoadImage("754.jpg", CV_LOAD_IMAGE_COLOR);//å¦‚æœæƒ³è¦åŠ é€Ÿï¼Œå¯ä»¥ç”¨ç°è‰²æ¥æ“ä½œ,ç°è‰²åŒ¹é…å¾ˆå·®
+	IplImage *part = cvLoadImage("754_part.jpg", CV_LOAD_IMAGE_COLOR);//ä¸€èˆ¬å°ºå¯¸å¤§å°å·®è·20%å¯ä»¥æ‰¾å‡ºæ¥
 	cvNamedWindow("monitor",CV_WINDOW_AUTOSIZE);
 	IplImage *part_temp ;
 
@@ -174,7 +174,7 @@ void find_part()
 	int width = part->width;
 	int height = part->height;
 	
-	int change_way = 0; //ÏÈËõĞ¡²éÕÒ£¬ÔÙ·Å´ó²éÕÒ
+	int change_way = 0; //å…ˆç¼©å°æŸ¥æ‰¾ï¼Œå†æ”¾å¤§æŸ¥æ‰¾
 	int writerSpeed = 5; 
 	CvVideoWriter* videoWriter = cvCreateVideoWriter("picture.avi",CV_FOURCC('x','v','i','d'),writerSpeed, cvSize(image->width,image->height));
 
@@ -225,7 +225,7 @@ void find_part()
 			minRect.height = rect.height;
 		}
 
-		//ÕâÀï»­Í¼»á¸ÉÈÅÍ¼Ïñ,ËùÒÔÒªÖØĞÂ¼ÓÔØ,´¿Êô»æÍ¼ĞèÒª£¬¿ÉÉ¾³ı
+		//è¿™é‡Œç”»å›¾ä¼šå¹²æ‰°å›¾åƒ,æ‰€ä»¥è¦é‡æ–°åŠ è½½,çº¯å±ç»˜å›¾éœ€è¦ï¼Œå¯åˆ é™¤
 		sprintf(text,"%.0f",sum);
 		cvPutText( image, text, cvPoint(min_loc.x+part_temp->width, min_loc.y), &font, CV_RGB(0,255,0));
 		cvRectangle(image, cvPoint(min_loc.x, min_loc.y), cvPoint((min_loc.x + part_temp->width),(min_loc.y + part_temp->height)), 
@@ -289,9 +289,255 @@ void find_part()
 }
 
 
+
+void find_tank()
+{
+	cvNamedWindow("monitor",CV_WINDOW_AUTOSIZE);
+
+
+
+	IplImage* image = cvLoadImage("tank.jpg", CV_LOAD_IMAGE_COLOR);
+	int writerSpeed = 1; 
+	CvVideoWriter* videoWriter = cvCreateVideoWriter("tank.avi",CV_FOURCC('x','v','i','d'),writerSpeed, cvSize(image->width,image->height));
+
+
+	cvShowImage("monitor",image);cvWaitKey();
+	cvWriteFrame(videoWriter,image);
+
+	IplImage* hsv = cvCreateImage(cvGetSize(image),8,3);
+	cvCvtColor(image,hsv,CV_BGR2HSV);
+	cvShowImage("monitor",hsv);cvWaitKey();
+	cvWriteFrame(videoWriter,hsv);
+
+	IplImage *dst = cvCreateImage(cvGetSize(image),8,1);
+	
+
+	cvSplit(hsv,dst,0,0,0);
+	//cvCvtColor(image,dst,CV_RGB2GRAY);
+	cvShowImage("monitor",dst);cvWaitKey();
+	cvWriteFrame(videoWriter,dst);
+	
+	
+	int slider_pos = 90; 
+	cvThreshold(dst,dst,slider_pos,255,CV_THRESH_BINARY);
+	cvShowImage("monitor",dst);cvWaitKey();
+	cvWriteFrame(videoWriter,dst);
+	
+	int an = 9;
+	IplConvKernel* element = cvCreateStructuringElementEx( an*2+1, an*2+1, an, an, CV_SHAPE_RECT, 0 );
+	cvDilate(dst,dst,0,1);
+	cvShowImage("monitor",dst);cvWaitKey();
+	cvWriteFrame(videoWriter,dst);
+
+	an = 7;
+	element = cvCreateStructuringElementEx( an*2+1, an*2+1, an, an, CV_SHAPE_RECT, 0 );
+	cvErode(dst,dst,element,1);
+	cvShowImage("monitor",dst);cvWaitKey(); 
+	cvWriteFrame(videoWriter,dst);
+
+	
+	
+	CvMemStorage* storage = cvCreateMemStorage(0);
+	CvSeq* contour = NULL;
+	CvSeq* temp;
+	cvFindContours( dst, storage, &contour,sizeof(CvContour), CV_RETR_LIST);
+	temp = contour;
+
+	CvRect rect;
+	for( ; contour != 0; contour = contour->h_next ){
+		rect = cvBoundingRect(contour,0);
+		//if(rect.height+rect.width<100 || rect.height>rect.width)
+		//	continue;
+		cvRectangle( image, cvPoint(rect.x,rect.y),cvPoint(rect.x+rect.width,rect.y+rect.height),CV_RGB(255,0,120), 1, 8, 0 );
+	}
+	cvShowImage("monitor",image);cvWaitKey();
+	cvWriteFrame(videoWriter,image);
+
+	contour = temp ;
+	cvReleaseImage(&image);
+	image = cvLoadImage("tank.jpg", CV_LOAD_IMAGE_COLOR);
+	for( ; contour != 0; contour = contour->h_next ){
+		rect = cvBoundingRect(contour,0);
+		if(rect.height+rect.width<100 || rect.height>rect.width || rect.width>image->width/2)
+			continue;
+		cvRectangle( image, cvPoint(rect.x,rect.y),cvPoint(rect.x+rect.width,rect.y+rect.height),CV_RGB(255,255,0), 2, 8, 0 );
+		
+		cvLine(image,cvPoint(rect.x-rect.width/4, rect.y+rect.height/2),
+			cvPoint(rect.x+rect.width*5/4, rect.y+rect.height/2),
+			CV_RGB(255,255,0), 2);
+		cvLine(image,cvPoint(rect.x+(rect.width/2), rect.y-rect.height/4),
+			cvPoint(rect.x+(rect.width/2), rect.y+rect.height*5/4),
+				 CV_RGB(255,255,0), 2);
+	}
+	cvShowImage("monitor",image);cvWaitKey();
+	cvWriteFrame(videoWriter,image);
+	cvWriteFrame(videoWriter,image);
+	cvWriteFrame(videoWriter,image);
+	cvWriteFrame(videoWriter,image);
+	cvWriteFrame(videoWriter,image);
+	cvReleaseVideoWriter(&videoWriter);
+}
+
+void find_building()
+{
+	cvNamedWindow("monitor",CV_WINDOW_AUTOSIZE);
+	char *photo = "building.jpg";
+	IplImage* image = cvLoadImage(photo, CV_LOAD_IMAGE_COLOR);
+	int writerSpeed = 1; 
+	CvVideoWriter* videoWriter = cvCreateVideoWriter("building.avi",CV_FOURCC('x','v','i','d'),writerSpeed, cvSize(image->width,image->height));
+
+	cvShowImage("monitor",image);cvWaitKey();
+	cvWriteFrame(videoWriter,image);
+
+
+	IplImage* image_part = cvLoadImage("building_text.jpg", CV_LOAD_IMAGE_COLOR);
+	int i_width;
+	int i_height;
+	double min_val;
+	double max_val;
+	CvPoint min_loc;
+	CvPoint max_loc;
+	IplImage *ftmp;
+	CvRect rect;
+	CvFont font;
+	char text[20];
+	cvInitFont( &font, CV_FONT_HERSHEY_SIMPLEX,0.4, 0.4, 0, 1, CV_AA );
+
+	i_width = image->width - image_part->width + 1;
+	i_height = image->height - image_part->height + 1;
+	
+	ftmp = cvCreateImage( cvSize(i_width, i_height), 32, 1 );
+	cvMatchTemplate( image, image_part, ftmp, CV_TM_SQDIFF); //CV_TM_SQDIFF_NORMED  CV_TM_CCORR CV_TM_CCOEFF... totoal 6 methon
+	cvMinMaxLoc(ftmp, &min_val, &max_val, &min_loc, &max_loc, NULL);
+	rect = cvRect(min_loc.x, min_loc.y,image_part->width,image_part->height);
+	sprintf(text,"Building BITEXCO");
+	cvPutText( image, text, cvPoint(rect.x, rect.y-10), &font, CV_RGB(255,0,0));
+	cvRectangle(image, cvPoint(min_loc.x, min_loc.y), cvPoint((min_loc.x + rect.width),(min_loc.y + rect.height)), 
+			CV_RGB(0,255,0), 2);
+	cvShowImage("monitor",image);cvWaitKey();
+	cvWriteFrame(videoWriter,image);
+
+	CvRect buildingRect = cvRect(rect.x, rect.y,image_part->width*7/4,image_part->height*13);
+	sprintf(text,"Construction");
+	cvPutText( image, text, cvPoint(buildingRect.x+10, buildingRect.y+40), &font, CV_RGB(255,0,0));
+	cvRectangle(image, cvPoint(buildingRect.x, buildingRect.y), cvPoint((buildingRect.x + buildingRect.width),(buildingRect.y + buildingRect.height)), 
+		CV_RGB(0,255,0), 2);
+	cvShowImage("monitor",image);cvWaitKey();
+	cvWriteFrame(videoWriter,image);
+
+	cvReleaseImage(&image);
+	image = cvLoadImage(photo, CV_LOAD_IMAGE_COLOR);
+	IplImage *dst = cvCreateImage(cvGetSize(image),8,1);
+	cvCvtColor(image,dst,CV_RGB2GRAY);
+	cvShowImage("monitor",dst);cvWaitKey();
+	cvWriteFrame(videoWriter,dst);
+
+	cvSetImageROI(dst,buildingRect);
+	int slider_pos = 180; 
+	cvThreshold(dst,dst,slider_pos,255,CV_THRESH_BINARY_INV);
+	cvResetImageROI(dst);
+	cvShowImage("monitor",dst);cvWaitKey();
+	cvWriteFrame(videoWriter,dst);
+
+	cvSetImageROI(dst,buildingRect); 
+	CvMemStorage* storage = cvCreateMemStorage(0);
+	CvSeq* contour = NULL;
+	CvSeq* contour_tmp;
+	cvFindContours( dst, storage, &contour,sizeof(CvContour), CV_RETR_LIST);
+	
+	contour_tmp = contour;
+	
+	cvSetImageROI(image,buildingRect); 
+	for( ; contour != 0; contour = contour->h_next ){
+		rect = cvBoundingRect(contour,0);
+		cvRectangle( image, cvPoint(rect.x,rect.y),cvPoint(rect.x+rect.width,rect.y+rect.height),CV_RGB(255,0,120), 1, 8, 0 );
+	}
+	cvResetImageROI(image);
+	cvShowImage("monitor",image);cvWaitKey();
+	cvWriteFrame(videoWriter,image);
+
+	int index = 0;
+	contour = contour_tmp;
+	cvReleaseImage(&image);
+	image = cvLoadImage(photo, CV_LOAD_IMAGE_COLOR);
+	cvSetImageROI(image,buildingRect); 
+	for( ; contour != 0; contour = contour->h_next ){
+		rect = cvBoundingRect(contour,0);
+		if(rect.height+rect.width<15 || rect.width < buildingRect.width/3 || rect.width > buildingRect.width/2  || rect.height*4>rect.width)
+			continue;
+		cvRectangle( image, cvPoint(rect.x,rect.y),cvPoint(rect.x+rect.width,rect.y+rect.height),CV_RGB(255,0,120), 2, 8, 0 );
+		sprintf(text,"%d",++index);
+		cvPutText( image, text, cvPoint(rect.x+rect.width+3, rect.y+3), &font, CV_RGB(255,0,0));
+	}
+	cvResetImageROI(image);
+	cvShowImage("monitor",image);cvWaitKey();
+	cvWriteFrame(videoWriter,image);
+
+	index = 0;
+	contour = contour_tmp;
+	cvReleaseImage(&image);
+	image = cvLoadImage(photo, CV_LOAD_IMAGE_COLOR);
+	cvSetImageROI(image,buildingRect); 
+	for( ; contour != 0; contour = contour->h_next ){
+		rect = cvBoundingRect(contour,0);
+		if(rect.height+rect.width<15 || rect.width < buildingRect.width/3 || rect.width > buildingRect.width/2  || rect.height*4>rect.width)
+			continue;
+		if(++index !=2)
+			continue;
+		cvRectangle( image, cvPoint(rect.x,rect.y),cvPoint(rect.x+rect.width,rect.y+rect.height),CV_RGB(255,0,120), 2, 8, 0 );
+		sprintf(text,"Target");
+		cvPutText( image, text, cvPoint(rect.x, rect.y-12), &font, CV_RGB(255,0,120));
+		printf("%d %d  %d %d\n",rect.x,rect.y,buildingRect.x,buildingRect.y);
+		break;
+	}
+ 	cvResetImageROI(image);
+	cvShowImage("monitor",image);cvWaitKey();
+	cvWriteFrame(videoWriter,image);
+
+
+	cvReleaseImage(&image);
+	image = cvLoadImage(photo, CV_LOAD_IMAGE_COLOR);
+	CvPoint coordinate = cvPoint(buildingRect.x+rect.x+rect.width/2,buildingRect.y+rect.y+rect.height/2);
+	cvCircle(image,coordinate,3,CV_RGB(255,0,255),2); 
+	sprintf(text,"[%d,%d]",coordinate.x-image->width/2,image->height/2 -coordinate.y);
+	cvPutText( image, text, cvPoint(coordinate.x +18, coordinate.y ), &font, CV_RGB(0,255,0));
+	cvLine(image,cvPoint(0,image->height/2),cvPoint(image->width,image->height/2),CV_RGB(0,255,0),2);
+	cvLine(image,cvPoint(image->width/2,0),cvPoint(image->width/2,image->height),CV_RGB(0,255,0),2);
+	cvShowImage("monitor",image);cvWaitKey();
+	cvWriteFrame(videoWriter,image);
+	cvWriteFrame(videoWriter,image);
+	cvWriteFrame(videoWriter,image);
+	cvWriteFrame(videoWriter,image);
+	cvWriteFrame(videoWriter,image);
+	cvWriteFrame(videoWriter,image);
+	cvReleaseVideoWriter(&videoWriter);
+}
+
+void trace_helicorpter()
+{
+	CvCapture* capture = cvCaptureFromAVI( "r.avi" );
+	cvNamedWindow( "monitor", 1 );
+	IplImage *frame=cvQueryFrame(capture);
+
+	while(1)  
+	{  
+		frame=cvQueryFrame(capture);
+		if(!frame)
+		{
+			printf("get frame error\n");
+			break;
+		}
+		cvShowImage( "monitor", frame );
+		if(cvWaitKey(100)>0) break; //è¿™ä¸ªå¿…é¡»è¦æœ‰ï¼Œå¦åˆ™åªæœ‰ç°è‰²çª—å£,æ•°å€¼å¯ä»¥æ§åˆ¶æ’­æ”¾é€Ÿåº¦
+	}
+}
+
 int main()
 {	
 	//ps_diff();
-	find_part();
+	//find_part();
+	//find_tank();
+	//find_building();
+	trace_helicorpter();
 	return 0;
 }
