@@ -515,10 +515,18 @@ void find_building()
 
 void trace_helicorpter()
 {
-	CvCapture* capture = cvCaptureFromAVI( "r.avi" );
+	CvCapture* capture = cvCaptureFromAVI( "s30.avi" );
 	cvNamedWindow( "monitor", 1 );
 	IplImage *frame=cvQueryFrame(capture);
-
+	IplImage* gray = cvCreateImage(cvGetSize(frame),8,1);
+	CvRect rect;
+	CvFont font;
+	char text[20]={0};
+	cvInitFont( &font, CV_FONT_HERSHEY_SIMPLEX,0.4, 0.4, 0, 1, CV_AA );
+	int writerSpeed = 25; 
+	CvVideoWriter* videoWriter = cvCreateVideoWriter("s30_CV.avi",CV_FOURCC('x','v','i','d'),writerSpeed, 
+		cvSize(frame->width,frame->height));
+	int count=0;
 	while(1)  
 	{  
 		frame=cvQueryFrame(capture);
@@ -527,9 +535,41 @@ void trace_helicorpter()
 			printf("get frame error\n");
 			break;
 		}
+		cvCvtColor(frame,gray,CV_RGB2GRAY);
+		gray->origin = frame->origin;
+		int slider_pos = 90; 
+		cvThreshold(gray,gray,slider_pos,255,CV_THRESH_BINARY_INV);
+		int an = 10;
+		IplConvKernel* element = cvCreateStructuringElementEx( an*2+1, an*2+1, an, an, CV_SHAPE_RECT, 0 );
+		cvDilate(gray,gray,element,1);
+		//cvErode(dst,dst,element,1);
+
+		CvMemStorage* storage = cvCreateMemStorage(0);
+		CvSeq* contour = NULL;
+		cvFindContours( gray, storage, &contour,sizeof(CvContour), CV_RETR_LIST);
+		
+		for( ; contour != 0; contour = contour->h_next ){
+			
+			rect = cvBoundingRect(contour,0);
+			if(rect.width+rect.height<30 || rect.x>320)
+				continue;
+			//cvRectangle( frame, cvPoint(rect.x,rect.y),cvPoint(rect.x+rect.width,rect.y+rect.height),CV_RGB(255,0,120), 1, 8, 0 );
+			cvRectangle( frame, cvPoint(rect.x+rect.width/2-15,rect.y+rect.height/2-15),
+				cvPoint(rect.x+rect.width/2+15,rect.y+rect.height/2+15),CV_RGB(255,0,120), 1, 8, 0 );
+			//cvCircle(frame,cvPoint(rect.x+rect.width/2,rect.y+rect.height/2),20,CV_RGB(255,0,120));
+			if(++count%15 == 0)
+			sprintf(text,"[%d,%d]",rect.x+rect.width/2,rect.y+rect.height/2);
+			cvPutText( frame, text, cvPoint(rect.x +18, rect.y-18 ), &font, CV_RGB(255,0,120));
+			break;
+		}
+		
+
 		cvShowImage( "monitor", frame );
-		if(cvWaitKey(100)>0) break; //这个必须要有，否则只有灰色窗口,数值可以控制播放速度
+		cvWriteFrame(videoWriter,frame);
+	
+		if(cvWaitKey(20)>0) break; //这个必须要有，否则只有灰色窗口,数值可以控制播放速度
 	}
+	cvReleaseVideoWriter(&videoWriter);
 }
 
 int main()
