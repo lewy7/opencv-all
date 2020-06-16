@@ -170,6 +170,8 @@ void COpencvMFCDlg::OnPaint()
 	else
 	{
 		CDialog::OnPaint();
+        CDialog::UpdateWindow(); // é˜²æ­¢ æœ€å°åŒ–çª—å£åå›¾ç‰‡æ¶ˆå¤±
+        OnDisplay();    // é‡ç»˜
 	}
 }
 
@@ -189,24 +191,25 @@ void COpencvMFCDlg::OnAction()
 void COpencvMFCDlg::OnDisplay() 
 {
 	// TODO: Add your control notification handler code here
+	//https://www.cnblogs.com/walespeng/articles/4149613.html
 	IplImage *img = cvLoadImage("car.jpg",1);
 	CDC* pDC = GetDlgItem(IDC_SCREEN) ->GetDC();
 	HDC hDC = pDC ->GetSafeHdc();  
 
 	CRect rect;
 	GetDlgItem(IDC_SCREEN) ->GetClientRect(&rect);
-	int rw = rect.right - rect.left;            // Çó³öÍ¼Æ¬¿Ø¼şµÄ¿íºÍ¸ß
+	int rw = rect.right - rect.left;            // æ±‚å‡ºå›¾ç‰‡æ§ä»¶çš„å®½å’Œé«˜
     int rh = rect.bottom - rect.top;
-    int iw = img->width;                        // ¶ÁÈ¡Í¼Æ¬µÄ¿íºÍ¸ß
+    int iw = img->width;                        // è¯»å–å›¾ç‰‡çš„å®½å’Œé«˜
     int ih = img->height;
-    int tx = (int)(rw - iw)/2;                    // Ê¹Í¼Æ¬µÄÏÔÊ¾Î»ÖÃÕıºÃÔÚ¿Ø¼şµÄÕıÖĞ
+    int tx = (int)(rw - iw)/2;                    // ä½¿å›¾ç‰‡çš„æ˜¾ç¤ºä½ç½®æ­£å¥½åœ¨æ§ä»¶çš„æ­£ä¸­
     int ty = (int)(rh - ih)/2;
-    SetRect( rect, tx, ty, tx+iw, ty+ih );
+    SetRect(rect, tx, ty, tx+iw, ty+ih);
 	
 	CvvImage cimg;
-    cimg.CopyOf(img);                            // ¸´ÖÆÍ¼Æ¬
-    cimg.DrawToHDC(hDC, &rect);                // ½«Í¼Æ¬»æÖÆµ½ÏÔÊ¾¿Ø¼şµÄÖ¸¶¨ÇøÓòÄÚ
-	//cimg.Destroy();   //²»ĞèÒªÖ´ĞĞ
+    cimg.CopyOf(img);                            // å¤åˆ¶å›¾ç‰‡
+    cimg.DrawToHDC(hDC, &rect);                // å°†å›¾ç‰‡ç»˜åˆ¶åˆ°æ˜¾ç¤ºæ§ä»¶çš„æŒ‡å®šåŒºåŸŸå†…
+	//cimg.Destroy();   //ä¸éœ€è¦æ‰§è¡Œ
 	ReleaseDC(pDC);
 
 
